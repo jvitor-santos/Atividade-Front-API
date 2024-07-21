@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atividade Front-End</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./script.js"></script>
+</head>
+
+<body>
+  <div class="flex flex-col md:flex-row h-auto min-h-screen w-full justify-center items-center bg-[#084005] p-7 gap-7">
+    <div id="dog"></div>
+    <div id="fox"></div>
+    <div id="cat"></div>
+  </div>
+
+  <script>
+    const BASE_URL_IMAGE_CAT = 'https://api.thecatapi.com/v1'
+    const BASE_URL_IMAGE_DOG = 'https://api.thedogapi.com/v1'
+    const BASE_URL_IMAGE_FOX = 'https://randomfox.ca';
+
+    const renderContent = ({ title, image, action }) => {
+      return `
+        <div class="w-[320px] h-auto flex gap-2 flex-col items-center">
+          <div class="text-center">
+            <h2 class="text-lg font-bold text-[#ffffff]">${title}</h2>
+            <button class="border border-[#1E1F28] w-full max-w-[150px] h-auto text-sm py-2 px-4 bg-[#117f09] text-[#ffffff] rounded" onclick="${action}">Mudar de imagem</button>
+          </div>
+
+          <img src="${image}" class="w-full h-[320px] object-cover rounded-full">
+        </div>
+    `;
+    }
+
+    const getImageCat = async () => {
+      await fetch(`${BASE_URL_IMAGE_CAT}/images/search?limit=1`)
+        .then((response) => response.json())
+        .then((content) => {
+          const image = content[0]?.url
+
+          const render = renderContent({ title: 'Gato:', image, action: 'getImageCat()' });
+          const element = document.getElementById('cat');
+          element.innerHTML = render
+        })
+    }
+
+    const getImageDog = async () => {
+      await fetch(`${BASE_URL_IMAGE_DOG}/images/search?limit=1`)
+        .then((response) => response.json())
+        .then((content) => {
+          const image = content[0]?.url
+
+          const render = renderContent({ title: 'Cachorro:', image, action: 'getImageDog()' });
+          const element = document.getElementById('dog');
+          element.innerHTML = render
+        })
+    }
+
+    const getImageFox = async () => {
+      await fetch(`${BASE_URL_IMAGE_FOX}/floof/`)
+        .then((response) => response.json())
+        .then((content) => {
+          const image = content?.image
+
+          const render = renderContent({ title: 'Raposa:', image, action: 'getImageFox()' });
+          const element = document.getElementById('fox');
+          element.innerHTML = render
+        })
+    }
+
+    getImageCat()
+    getImageDog()
+    getImageFox()
+  </script>
+</body>
+
+</html>
